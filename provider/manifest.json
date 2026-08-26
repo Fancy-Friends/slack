@@ -1,0 +1,37 @@
+{
+  "$comment": "THE hand-written part. Four packages are generated from this directory and are never edited. Slack's current developer reference is authoritative; its official OpenAPI repository was archived in 2024 and last updated in 2021, so it is not represented as a current drift source.",
+  "connectorApi": 1,
+  "service": "slack",
+  "title": "Slack",
+  "domain": "messaging",
+  "docs": "https://docs.slack.dev/apis/web-api/",
+  "auth": "oauth2",
+  "requires": ["accessToken", "refreshToken", "clientId", "clientSecret"],
+  "authorize": { "kind": "bearer", "credential": "accessToken" },
+  "oauth": {
+    "flow": "authorization_code",
+    "authorizeUrl": "https://slack.com/oauth/v2/authorize",
+    "tokenUrl": "https://slack.com/api/oauth.v2.access",
+    "scopes": ["chat:write"],
+    "accessTokenCredential": "accessToken",
+    "refreshTokenCredential": "refreshToken",
+    "refreshTokenRotates": true,
+    "accessTokenTtlSeconds": 43200,
+    "$refreshTokenRotates": "This definition requires Slack token rotation to be enabled for the app. Slack then expires access tokens after 12 hours and revokes each used refresh token after a short grace period, returning a replacement. Reusing an old refresh token or refreshing concurrently is therefore unsafe.",
+    "$scopeComment": "chat:write is the single bot or user scope Slack documents for chat.postMessage. It posts only where that installation is allowed; posting to every public channel would additionally require chat:write.public and is deliberately not requested."
+  },
+  "sandbox": "separate-account",
+  "$sandboxComment": "CHECKED. Slack recommends a development workspace and offers Developer Program sandboxes: isolated Enterprise orgs with their own workspaces, users, apps and data. They use the same slack.com API host, so the installed workspace token selects the estate.",
+  "sandboxNote": "Install the app into a dedicated development workspace or Slack developer sandbox. Messages are real inside that workspace, but its users and data are separate from production. Developer sandboxes expire by default and have feature and integration limits.",
+  "baseUrls": {
+    "live": "https://slack.com",
+    "sandbox": "https://slack.com"
+  },
+  "encoding": "json",
+  "credentialFields": [
+    { "key": "clientId", "label": "Client ID", "scope": "provider", "secret": false, "help": "The Slack app client ID shared by the installation." },
+    { "key": "clientSecret", "label": "Client secret", "scope": "provider", "secret": true, "help": "The matching Slack app client secret used by OAuth V2." },
+    { "key": "accessToken", "label": "Bot access token", "scope": "account", "secret": true, "help": "The workspace installation's rotating bot token. Token rotation must be enabled; the token expires after 12 hours." },
+    { "key": "refreshToken", "label": "Refresh token", "scope": "account", "secret": true, "help": "The workspace installation's single-use refresh token. Persist Slack's replacement after every refresh." }
+  ]
+}

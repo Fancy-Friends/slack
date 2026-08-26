@@ -1,0 +1,34 @@
+{
+  "$comment": "POST /api/chat.postMessage, read from Slack's current method reference. The Web API is RPC-shaped rather than REST-shaped: the method name is the path, with no resource id nested beneath it.",
+  "operation": "message_post",
+  "kind": "message",
+  "title": "Slack message",
+  "description": "Post a text message to a Slack channel or conversation.",
+  "summary": "post a Slack message",
+  "docs": "https://docs.slack.dev/reference/methods/chat.postMessage",
+  "sideEffects": "unsafe-to-replay",
+  "$idempotencyComment": "Slack documents no idempotency key for chat.postMessage. A retry can create a second visible message and notify the channel twice, so a transport ambiguity must not be replayed automatically.",
+  "request": {
+    "method": "POST",
+    "path": "/api/chat.postMessage",
+    "encoding": "json",
+    "$encodingComment": "Slack still accepts form encoding, but its current Web API guide explicitly recommends JSON for chat.postMessage because blocks and attachments otherwise have to be JSON encoded inside form strings. The bearer header is mandatory for JSON writes."
+  },
+  "resultCheck": {
+    "okField": "ok",
+    "messageField": "error",
+    "error": "Slack rejected chat.postMessage",
+    "$comment": "Slack returns HTTP 200 for application failures. The top-level error code distinguishes fixes such as not_in_channel from channel_not_found, so the generated error preserves Slack's own reason rather than replacing it with a generic failure."
+  },
+  "config": [
+    { "type": "text", "key": "channel", "label": "Channel", "required": true, "description": "The encoded channel, private group, direct-message or group-message conversation ID visible to the installed app.", "send": { "in": "body", "as": "channel", "value": "string" } },
+    { "type": "textarea", "key": "text", "label": "Message", "required": true, "description": "The message's top-level text. Keeping meaningful text here also gives screen readers a complete fallback when richer blocks are added elsewhere.", "send": { "in": "body", "as": "text", "value": "string" } }
+  ],
+  "outputShape": [
+    { "path": "data.ok", "type": "boolean", "description": "True after resultCheck has established Slack accepted the message." },
+    { "path": "data.channel", "type": "string", "description": "The conversation that received the message." },
+    { "path": "data.ts", "type": "string", "description": "Slack's message timestamp and stable message identifier within the channel." },
+    { "path": "data.message", "type": "object", "description": "The message object Slack stored, including its text and authorship metadata." }
+  ],
+  "contract": { "sends": ["channel", "text"], "reads": ["ok", "error", "channel", "ts", "message"] }
+}

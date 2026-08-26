@@ -1,0 +1,17 @@
+{
+  "$comment": "Slack returns the accepted message response at the top level. A failure fixture would instead contain ok:false and error; resultCheck refuses that branch before output is published.",
+  "operation": "message_post",
+  "response": {
+    "ok": true,
+    "channel": "C123ABC456",
+    "ts": "1787719200.000100",
+    "message": {
+      "user": "U012AB3CDE",
+      "type": "message",
+      "ts": "1787719200.000100",
+      "text": "Deployment finished successfully.",
+      "app_id": "A012BC3DEF",
+      "bot_id": "B012AB3CD"
+    }
+  }
+}
