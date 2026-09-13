@@ -3,6 +3,12 @@
 All notable changes to `@particle-academy/slack-ui`,
 `@particle-academy/slack-js`, `particle-academy/slack-php` and `fancy-slack`.
 
+## [0.1.3] — 2026-09-12
+
+### Changed
+
+- **Requires `fancy-connector-core` ≥ 0.4.0** — `particle-academy/fancy-connector-core` for php, `@particle-academy/fancy-connector-core` for js. The flow executors now pass a provider's declared `idempotencyMaxLength` through to the core's key derivation, and a named argument an older core does not accept is a fatal rather than a no-op, so the floor moves with it. This connector declares no limit and passes nothing, so nothing else changes for it; the bump is the floor alone.
+
 ## [0.1.2] — 2026-09-11
 
 ### Added
