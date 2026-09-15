@@ -48,7 +48,7 @@ final class SlackFaker
     }
 
     /** @param array<string,mixed> $config */
-    private static function MessagePost(array $config, mixed $fake): array
+    private static function MessagePost(array $config, mixed $fake): array|\stdClass
     {
         return [
         'ok' => true,
