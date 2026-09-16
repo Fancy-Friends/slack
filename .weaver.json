@@ -51,7 +51,7 @@
     "packages/py/src/fancy_slack/_runtime.py": "5592070c140ee832baa35be6df6ef127f9c0a9f596767581f15806a4594e281a",
     "packages/py/src/fancy_slack/actions/__init__.py": "5979282d0739bdc8d843151b6d3c8b2d97d1e359f50d1516350608296dc52c96",
     "packages/py/src/fancy_slack/actions/message_post.py": "a154584e1d1561a2809995266902454f3c781b84d252a43776733e9d94dc6816",
-    "packages/py/src/fancy_slack/faker.py": "198555fdd4ab09810bfa2645b866abd8e89cb52b68e121d1597782f9fbcbc3d1",
+    "packages/py/src/fancy_slack/faker.py": "28a50660672939d437561d076da0735e81a1dd0a88766af7d764db6f130a1e17",
     "packages/py/src/fancy_slack/py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "packages/py/src/fancy_slack/service.py": "b05a36fb2e374751efe085cbfe761cbedaf026621a07d4824ee01684c4e1077f",
     "packages/py/tests/test_faker.py": "c93414459bb8f4f926d37e4f032b1402bcf8461e31dde12180ee47eb2ed5d983",
