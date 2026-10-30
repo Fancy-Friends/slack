@@ -12,13 +12,13 @@
     "flow": "authorization_code",
     "authorizeUrl": "https://slack.com/oauth/v2/authorize",
     "tokenUrl": "https://slack.com/api/oauth.v2.access",
-    "scopes": ["chat:write"],
+    "scopes": ["chat:write", "users:read", "users:read.email"],
     "accessTokenCredential": "accessToken",
     "refreshTokenCredential": "refreshToken",
     "refreshTokenRotates": true,
     "accessTokenTtlSeconds": 43200,
     "$refreshTokenRotates": "This definition requires Slack token rotation to be enabled for the app. Slack then expires access tokens after 12 hours and revokes each used refresh token after a short grace period, returning a replacement. Reusing an old refresh token or refreshing concurrently is therefore unsafe.",
-    "$scopeComment": "chat:write is the single bot or user scope Slack documents for chat.postMessage. It posts only where that installation is allowed; posting to every public channel would additionally require chat:write.public and is deliberately not requested."
+    "$scopeComment": "chat:write is the bot or user scope Slack documents for chat.postMessage and chat.update. It posts only where that installation is allowed; posting to every public channel would additionally require chat:write.public and is deliberately not requested. users:read.email, which Slack grants only together with users:read, is for user_lookup_by_email."
   },
   "sandbox": "separate-account",
   "$sandboxComment": "CHECKED. Slack recommends a development workspace and offers Developer Program sandboxes: isolated Enterprise orgs with their own workspaces, users, apps and data. They use the same slack.com API host, so the installed workspace token selects the estate.",
@@ -32,6 +32,7 @@
     { "key": "clientId", "label": "Client ID", "scope": "provider", "secret": false, "help": "The Slack app client ID shared by the installation." },
     { "key": "clientSecret", "label": "Client secret", "scope": "provider", "secret": true, "help": "The matching Slack app client secret used by OAuth V2." },
     { "key": "accessToken", "label": "Bot access token", "scope": "account", "secret": true, "help": "The workspace installation's rotating bot token. Token rotation must be enabled; the token expires after 12 hours." },
-    { "key": "refreshToken", "label": "Refresh token", "scope": "account", "secret": true, "help": "The workspace installation's single-use refresh token. Persist Slack's replacement after every refresh." }
+    { "key": "refreshToken", "label": "Refresh token", "scope": "account", "secret": true, "help": "The workspace installation's single-use refresh token. Persist Slack's replacement after every refresh." },
+    { "key": "signingSecret", "label": "Signing secret", "scope": "provider", "secret": true, "optional": true, "help": "The Slack app's signing secret, from Basic Information. One value for the whole app, not per workspace. Required only by the block_actions trigger." }
   ]
 }

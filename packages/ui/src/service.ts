@@ -99,6 +99,14 @@ export const SLACK_CREDENTIALS = [
     "scope": "account",
     "secret": true,
     "help": "The workspace installation's single-use refresh token. Persist Slack's replacement after every refresh."
+  },
+  {
+    "key": "signingSecret",
+    "label": "Signing secret",
+    "scope": "provider",
+    "secret": true,
+    "optional": true,
+    "help": "The Slack app's signing secret, from Basic Information. One value for the whole app, not per workspace. Required only by the block_actions trigger."
   }
 ] as const;
 
@@ -131,7 +139,9 @@ export const SLACK_OAUTH = {
   "authorizeUrl": "https://slack.com/oauth/v2/authorize",
   "tokenUrl": "https://slack.com/api/oauth.v2.access",
   "scopes": [
-    "chat:write"
+    "chat:write",
+    "users:read",
+    "users:read.email"
   ],
   "accessTokenCredential": "accessToken",
   "refreshTokenCredential": "refreshToken",

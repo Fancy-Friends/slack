@@ -80,6 +80,12 @@ export const slackMessageKind: NodeKindDefinition = defineConnectorKind(SLACK_ME
       "label": "Message",
       "required": true,
       "description": "The message's top-level text. Keeping meaningful text here also gives screen readers a complete fallback when richer blocks are added elsewhere."
+    },
+    {
+      "type": "json",
+      "key": "blocks",
+      "label": "Blocks",
+      "description": "Optional Block Kit layout: a JSON array of blocks, including buttons. Message text is still required and is what screen readers and notifications show."
     }
   ],
   defaultConfig: {

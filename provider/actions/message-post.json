@@ -22,7 +22,8 @@
   },
   "config": [
     { "type": "text", "key": "channel", "label": "Channel", "required": true, "description": "The encoded channel, private group, direct-message or group-message conversation ID visible to the installed app.", "send": { "in": "body", "as": "channel", "value": "string" } },
-    { "type": "textarea", "key": "text", "label": "Message", "required": true, "description": "The message's top-level text. Keeping meaningful text here also gives screen readers a complete fallback when richer blocks are added elsewhere.", "send": { "in": "body", "as": "text", "value": "string" } }
+    { "type": "textarea", "key": "text", "label": "Message", "required": true, "description": "The message's top-level text. Keeping meaningful text here also gives screen readers a complete fallback when richer blocks are added elsewhere.", "send": { "in": "body", "as": "text", "value": "string" } },
+    { "type": "json", "key": "blocks", "label": "Blocks", "description": "Optional Block Kit layout: a JSON array of blocks, including buttons. Message text is still required and is what screen readers and notifications show.", "send": { "in": "body", "as": "blocks", "value": "json" } }
   ],
   "outputShape": [
     { "path": "data.ok", "type": "boolean", "description": "True after resultCheck has established Slack accepted the message." },
@@ -30,5 +31,5 @@
     { "path": "data.ts", "type": "string", "description": "Slack's message timestamp and stable message identifier within the channel." },
     { "path": "data.message", "type": "object", "description": "The message object Slack stored, including its text and authorship metadata." }
   ],
-  "contract": { "sends": ["channel", "text"], "reads": ["ok", "error", "channel", "ts", "message"] }
+  "contract": { "sends": ["channel", "text", "blocks"], "reads": ["ok", "error", "channel", "ts", "message"] }
 }

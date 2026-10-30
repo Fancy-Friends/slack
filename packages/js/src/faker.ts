@@ -39,10 +39,79 @@ function fakeMessagePost({ config, fake }: FakeRequest): unknown {
   };
 }
 
+function fakeMessageUpdate({ config, fake }: FakeRequest): unknown {
+  return {
+    "ok": true,
+    "channel": "C123ABC456",
+    "ts": "1787719200.000100",
+    "text": "Ticket #42 assigned to Rosa.",
+  };
+}
+
+function fakeUserLookupByEmail({ config, fake }: FakeRequest): unknown {
+  return {
+    "ok": true,
+    "user": {
+      "id": "U2CERLKJA",
+      "team_id": "T1DC2JH3J",
+      "name": "rosa",
+      "real_name": "Rosa Diaz",
+      "deleted": false,
+      "is_bot": false,
+    },
+  };
+}
+
+function fakeBlockActions({ config, fake }: FakeRequest): unknown {
+  return {
+    "type": "block_actions",
+    "team": {
+      "id": "T1DC2JH3J",
+      "domain": "testteamnow",
+    },
+    "enterprise": null,
+    "user": {
+      "id": "U2CERLKJA",
+      "username": "roadrunner",
+      "team_id": "T1DC2JH3J",
+    },
+    "channel": {
+      "id": "C0123ABCD",
+      "name": "support",
+    },
+    "message": {
+      "type": "message",
+      "ts": "1730070000.000100",
+      "text": "Ticket #42: Printer on fire",
+    },
+    "trigger_id": "398738663015.47445629121.803a0bc887a14d10d2c447fce8b6703c",
+    "response_url": "https://hooks.slack.com/actions/T1DC2JH3J/397700885554/96rGlfmibIGlgcZRskXaIFfN",
+    "actions": [
+      {
+        "action_id": "ticket_assign_me",
+        "block_id": "ticket_42",
+        "type": "button",
+        "value": "42",
+        "selected_option": null,
+        "action_ts": "1730070012.345678",
+      },
+    ],
+  };
+}
+
 export const slackFaker: ConnectorFaker = (operation, request) => {
   switch (operation) {
     case "message_post":
       return fakeMessagePost(request);
+
+    case "message_update":
+      return fakeMessageUpdate(request);
+
+    case "user_lookup_by_email":
+      return fakeUserLookupByEmail(request);
+
+    case "block_actions":
+      return fakeBlockActions(request);
 
     default:
       // A faker asked for an operation it has no shape for must SAY so. Making

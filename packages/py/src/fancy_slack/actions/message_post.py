@@ -18,6 +18,7 @@ estate, and either calls Slack or calls the faker.
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from .._runtime import CallResult, ConnectorConfigError, Mode, call
@@ -41,6 +42,16 @@ def body(config: dict[str, Any]) -> dict[str, Any]:
             "message_post: \"text\" is required (Message)."
         )
 
+    _blocks = config.get("blocks")
+    if isinstance(_blocks, str) and _blocks != "":
+        try:
+            json.loads(_blocks)
+        except ValueError as _error:
+            raise ConnectorConfigError(
+                "message_post: \"blocks\" must be JSON: "
+                f"{_error}"
+            ) from _error
+
     out: dict[str, Any] = {}
     _value = config.get("channel")
     if _value is None or _value == "":
@@ -52,6 +63,9 @@ def body(config: dict[str, Any]) -> dict[str, Any]:
         raise ConnectorConfigError("message_post: \"text\" is required.")
 
     out["text"] = str(_value)
+    _value = config.get("blocks")
+    if _value is not None and _value != "":
+        out["blocks"] = json.loads(_value) if isinstance(_value, str) else _value
 
     return out
 

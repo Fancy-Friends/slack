@@ -18,10 +18,13 @@ from __future__ import annotations
 
 from ._fake import FakeValues
 from .actions.message_post import message_post
+from .actions.message_update import message_update
+from .actions.user_lookup_by_email import user_lookup_by_email
 from .faker import respond
 from .service import BASE_URLS, CONNECTOR_API_VERSION, REQUIRES, SANDBOX, SERVICE, TITLE, descriptor
+from .triggers import block_actions
 
-__version__ = "0.1.3"
+__version__ = "0.2.0"
 
 __all__ = [
     "BASE_URLS",
@@ -31,7 +34,10 @@ __all__ = [
     "SERVICE",
     "TITLE",
     "FakeValues",
+    "block_actions",
     "descriptor",
     "message_post",
+    "message_update",
     "respond",
+    "user_lookup_by_email",
 ]

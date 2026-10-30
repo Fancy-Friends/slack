@@ -8,7 +8,11 @@
 # npm run provider -- slack
 
 from .message_post import message_post
+from .message_update import message_update
+from .user_lookup_by_email import user_lookup_by_email
 
 __all__ = [
     "message_post",
+    "message_update",
+    "user_lookup_by_email",
 ]

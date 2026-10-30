@@ -52,6 +52,69 @@ def _message_post(config: dict[str, Any], fake: FakeValues) -> Any:
     }
 
 
+def _message_update(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {
+        "ok": True,
+        "channel": "C123ABC456",
+        "ts": "1787719200.000100",
+        "text": "Ticket #42 assigned to Rosa.",
+    }
+
+
+def _user_lookup_by_email(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {
+        "ok": True,
+        "user": {
+            "id": "U2CERLKJA",
+            "team_id": "T1DC2JH3J",
+            "name": "rosa",
+            "real_name": "Rosa Diaz",
+            "deleted": False,
+            "is_bot": False,
+        },
+    }
+
+
+def _block_actions(config: dict[str, Any], fake: FakeValues) -> Any:
+    return {
+        "type": "block_actions",
+        "team": {
+            "id": "T1DC2JH3J",
+            "domain": "testteamnow",
+        },
+        "enterprise": None,
+        "user": {
+            "id": "U2CERLKJA",
+            "username": "roadrunner",
+            "team_id": "T1DC2JH3J",
+        },
+        "channel": {
+            "id": "C0123ABCD",
+            "name": "support",
+        },
+        "message": {
+            "type": "message",
+            "ts": "1730070000.000100",
+            "text": "Ticket #42: Printer on fire",
+        },
+        "trigger_id": "398738663015.47445629121.803a0bc887a14d10d2c447fce8b6703c",
+        "response_url": (
+                            "https://hooks.slack.com/actions/T1DC2JH3J/397700885554/96rGlfmi"
+                            "bIGlgcZRskXaIFfN"
+                        ),
+        "actions": [
+            {
+                "action_id": "ticket_assign_me",
+                "block_id": "ticket_42",
+                "type": "button",
+                "value": "42",
+                "selected_option": None,
+                "action_ts": "1730070012.345678",
+            },
+        ],
+    }
+
+
 def respond(operation: str, request: dict[str, Any]) -> Any:
     """Dispatch to the fixture for one operation."""
     config: dict[str, Any] = request.get("config") or {}
@@ -59,6 +122,15 @@ def respond(operation: str, request: dict[str, Any]) -> Any:
 
     if operation == "message_post":
         return _message_post(config, fake)
+
+    if operation == "message_update":
+        return _message_update(config, fake)
+
+    if operation == "user_lookup_by_email":
+        return _user_lookup_by_email(config, fake)
+
+    if operation == "block_actions":
+        return _block_actions(config, fake)
 
     # A faker asked for an operation it has no shape for must SAY so. Making
     # something up would produce a green run whose output silently has none of

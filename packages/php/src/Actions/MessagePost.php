@@ -57,6 +57,17 @@ final class MessagePost
             throw new ConnectorConfigException('message_post: "text" is required (Message).');
         }
 
+        $blocks = $config['blocks'] ?? null;
+        if (is_string($blocks) && $blocks !== '') {
+            try {
+                json_decode($blocks, false, 512, JSON_THROW_ON_ERROR);
+            } catch (\JsonException $e) {
+                throw new ConnectorConfigException(
+                    'message_post: "blocks" must be JSON: '.$e->getMessage(),
+                );
+            }
+        }
+
         $body = [];
 
         $value = $config['channel'] ?? null;
@@ -64,6 +75,11 @@ final class MessagePost
 
         $value = $config['text'] ?? null;
         $body['text'] = (string) $value;
+
+        $value = $config['blocks'] ?? null;
+        if ($value !== null && $value !== '') {
+            $body['blocks'] = is_string($value) ? json_decode($value, false, 512, JSON_THROW_ON_ERROR) : $value;
+        }
 
         $body = $body === [] ? new \stdClass() : $body;
         return $body;

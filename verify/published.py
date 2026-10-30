@@ -32,6 +32,72 @@ GOLDENS = [
             },
         },
     },
+    {
+        "operation": "message_update",
+        "config": {},
+        "expected": {
+            "ok": True,
+            "channel": "C123ABC456",
+            "ts": "1787719200.000100",
+            "text": "Ticket #42 assigned to Rosa.",
+        },
+    },
+    {
+        "operation": "user_lookup_by_email",
+        "config": {},
+        "expected": {
+            "ok": True,
+            "user": {
+                "id": "U2CERLKJA",
+                "team_id": "T1DC2JH3J",
+                "name": "rosa",
+                "real_name": "Rosa Diaz",
+                "deleted": False,
+                "is_bot": False,
+            },
+        },
+    },
+    {
+        "operation": "block_actions",
+        "config": {},
+        "expected": {
+            "type": "block_actions",
+            "team": {
+                "id": "T1DC2JH3J",
+                "domain": "testteamnow",
+            },
+            "enterprise": None,
+            "user": {
+                "id": "U2CERLKJA",
+                "username": "roadrunner",
+                "team_id": "T1DC2JH3J",
+            },
+            "channel": {
+                "id": "C0123ABCD",
+                "name": "support",
+            },
+            "message": {
+                "type": "message",
+                "ts": "1730070000.000100",
+                "text": "Ticket #42: Printer on fire",
+            },
+            "trigger_id": "398738663015.47445629121.803a0bc887a14d10d2c447fce8b6703c",
+            "response_url": (
+                                "https://hooks.slack.com/actions/T1DC2JH3J/397700885554/96rG"
+                                "lfmibIGlgcZRskXaIFfN"
+                            ),
+            "actions": [
+                {
+                    "action_id": "ticket_assign_me",
+                    "block_id": "ticket_42",
+                    "type": "button",
+                    "value": "42",
+                    "selected_option": None,
+                    "action_ts": "1730070012.345678",
+                },
+            ],
+        },
+    },
 ]
 
 

@@ -35,7 +35,7 @@ Everything below is generated from `provider/manifest.json`, so it cannot disagr
 
 ### Credentials
 
-A Slack connection holds 4 values.
+A Slack connection holds 5 values.
 
 **Two kinds of value, and mixing them up matters.** A `provider` credential is ONE value for the whole installation — an OAuth app's client secret serves every connected account. An `account` credential is one per connected account. A host that stores the second where it stores the first lets one account's credentials reach another's.
 
@@ -45,6 +45,7 @@ A Slack connection holds 4 values.
 | **Client secret** | per installation | **secret** | The matching Slack app client secret used by OAuth V2. |
 | **Bot access token** | per connected account | **secret** | The workspace installation's rotating bot token. Token rotation must be enabled; the token expires after 12 hours. |
 | **Refresh token** | per connected account | **secret** | The workspace installation's single-use refresh token. Persist Slack's replacement after every refresh. |
+| **Signing secret** *(optional)* | per installation | **secret** | The Slack app's signing secret, from Basic Information. One value for the whole app, not per workspace. Required only by the block_actions trigger. |
 
 ### Authorising
 
@@ -52,7 +53,7 @@ Slack uses OAuth2 (authorization_code). The package DECLARES the exchange; the H
 
 - **Authorize URL** — https://slack.com/oauth/v2/authorize
 - **Token URL** — https://slack.com/api/oauth.v2.access
-- **Scopes** — `chat:write`
+- **Scopes** — `chat:write`, `users:read`, `users:read.email`
 - **Access token lifetime** — 43200 seconds (12 hours). A host that never refreshes works all afternoon and is broken by morning.
 
 **The refresh tokens ROTATE, and they are single use.** Every refresh returns a new one and spends the one submitted, so replaying a spent token revokes the ENTIRE grant — the user is signed out, with nothing in the failure that says why.
@@ -84,6 +85,42 @@ Post a text message to a Slack channel or conversation.
 |---|---|---|
 | `channel` | yes | The encoded channel, private group, direct-message or group-message conversation ID visible to the installed app. |
 | `text` | yes | The message's top-level text. Keeping meaningful text here also gives screen readers a complete fallback when richer blocks are added elsewhere. |
+| `blocks` | no | Optional Block Kit layout: a JSON array of blocks, including buttons. Message text is still required and is what screen readers and notifications show. |
+
+#### `message_update` — Slack message update
+
+Replace the text and blocks of a Slack message the app posted.
+
+`POST /api/chat.update` · idempotent — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `channel` | yes | The conversation ID holding the message, as returned when it was posted or carried in a click. |
+| `ts` | yes | The message's ts, its stable identifier within the channel. |
+| `text` | yes | The replacement top-level text, kept as the accessible fallback for the blocks. |
+| `blocks` | no | Optional replacement Block Kit layout: a JSON array of blocks. |
+
+#### `user_lookup_by_email` — Slack user lookup by email
+
+Find the Slack user in this workspace who has a given email address.
+
+`GET /api/users.lookupByEmail` · reads only — safe to replay
+
+| Input | Required | What it is |
+|---|---|---|
+| `email` | yes | The email address to look up. Requires the users:read.email scope. |
+
+### Triggers
+
+#### `block_actions` — Slack button click
+
+Start when someone clicks a button or picks from a menu in a Slack message the app posted.
+
+Delivered by webhook, and the signature is verified before anything runs.
+
+**You have to set this up with the provider first:**
+
+In the Slack app's Interactivity & Shortcuts settings, turn interactivity on and set the Request URL to the route your host mounts for this trigger, then put the app's signing secret (Basic Information) on the connection as `signingSecret`. Slack shows the user an error unless the request is answered with a 200 within 3 seconds, so the host must acknowledge FIRST and run the graph after.
 
 ## Run it before you have credentials
 

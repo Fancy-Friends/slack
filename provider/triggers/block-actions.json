@@ -1,0 +1,43 @@
+{
+  "$comment": "Slack's interactivity callback for Block Kit buttons, menus and other actions (type block_actions). Read from docs.slack.dev 'Handling user interaction' and 'Verifying requests from Slack'. Slack posts it as application/x-www-form-urlencoded with ONE field, payload, holding the JSON, and signs the form body as sent. So the delivery is verified over the raw bytes first and decoded second (decode).",
+  "operation": "block_actions",
+  "kind": "block_actions",
+  "title": "Slack button click",
+  "description": "Start when someone clicks a button or picks from a menu in a Slack message the app posted.",
+  "summary": "a click in a Slack message",
+  "docs": "https://docs.slack.dev/interactivity/handling-user-interaction",
+  "sideEffects": "none",
+  "delivery": "webhook",
+  "setup": "In the Slack app's Interactivity & Shortcuts settings, turn interactivity on and set the Request URL to the route your host mounts for this trigger, then put the app's signing secret (Basic Information) on the connection as `signingSecret`. Slack shows the user an error unless the request is answered with a 200 within 3 seconds, so the host must acknowledge FIRST and run the graph after.",
+  "verification": {
+    "signatureHeader": "X-Slack-Signature",
+    "algorithm": "SHA-256",
+    "encoding": "hex",
+    "tolerance": 300,
+    "$toleranceComment": "Slack's guide rejects a request whose timestamp is more than five minutes from now, as a replay. Matched here.",
+    "payload": "v0:{timestamp}:{body}",
+    "$payloadComment": "Slack signs `v0:{X-Slack-Request-Timestamp}:{raw body}`, where the body is the FORM body exactly as received, before any decoding.",
+    "header": { "format": "prefixed", "prefix": "v0=" },
+    "timestampHeader": "X-Slack-Request-Timestamp",
+    "secretCredential": "signingSecret"
+  },
+  "decode": { "kind": "form-field-json", "field": "payload" },
+  "config": [],
+  "outputShape": [
+    { "path": "type", "type": "string", "description": "Always block_actions for this trigger." },
+    { "path": "team.id", "type": "string", "description": "The workspace the click came from." },
+    { "path": "enterprise", "type": "object", "description": "The Enterprise Grid org ({id}), or NULL outside Grid." },
+    { "path": "user.id", "type": "string", "description": "The Slack user who clicked. Map it to your own user on the host; user_lookup_by_email helps build that map." },
+    { "path": "user.team_id", "type": "string", "description": "The workspace the user belongs to." },
+    { "path": "channel", "type": "object", "description": "The conversation ({id}) holding the message, or NULL when the click came from a surface with no channel." },
+    { "path": "message", "type": "object", "description": "The message ({ts}) the click was on, or NULL. Pass channel.id and message.ts to message_update to change it." },
+    { "path": "trigger_id", "type": "string", "description": "Slack's short-lived id for opening a modal in response." },
+    { "path": "response_url", "type": "string", "description": "Slack's reply URL for this click. Published for completeness; this package never posts to it — use message_update." },
+    { "path": "actions[].action_id", "type": "string", "description": "Which button or menu was used. Route on this." },
+    { "path": "actions[].block_id", "type": "string", "description": "The block holding it." },
+    { "path": "actions[].type", "type": "string", "description": "button, static_select, …" },
+    { "path": "actions[].value", "type": "string", "description": "A button's value, or NULL for elements that carry none." },
+    { "path": "actions[].selected_option", "type": "object", "description": "A menu's choice ({value}), or NULL for a button." },
+    { "path": "actions[].action_ts", "type": "string", "description": "When the action happened." }
+  ]
+}

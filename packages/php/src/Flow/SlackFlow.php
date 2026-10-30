@@ -39,6 +39,9 @@ final class SlackFlow
     /** @var list<class-string> */
     public const EXECUTORS = [
         MessageExecutor::class,
+        MessageUpdateExecutor::class,
+        UserLookupByEmailExecutor::class,
+        BlockActionsExecutor::class,
     ];
 
     /**
