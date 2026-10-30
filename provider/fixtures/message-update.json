@@ -1,0 +1,10 @@
+{
+  "$comment": "chat.update answers with the channel, the unchanged ts and the stored text at the top level.",
+  "operation": "message_update",
+  "response": {
+    "ok": true,
+    "channel": "C123ABC456",
+    "ts": "1787719200.000100",
+    "text": "Ticket #42 assigned to Rosa."
+  }
+}

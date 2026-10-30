@@ -1,0 +1,8 @@
+{
+  "$comment": "users.lookupByEmail answers with the user object at the top level.",
+  "operation": "user_lookup_by_email",
+  "response": {
+    "ok": true,
+    "user": { "id": "U2CERLKJA", "team_id": "T1DC2JH3J", "name": "rosa", "real_name": "Rosa Diaz", "deleted": false, "is_bot": false }
+  }
+}

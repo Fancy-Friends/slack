@@ -3,6 +3,52 @@
 All notable changes to `@particle-academy/slack-ui`,
 `@particle-academy/slack-js`, `particle-academy/slack-php` and `fancy-slack`.
 
+## [0.2.0] — 2026-10-28
+
+### Added
+
+- **`block_actions`: a trigger for button clicks and menu choices.** Slack
+  posts interactivity as `application/x-www-form-urlencoded` with ONE field,
+  `payload`, holding the JSON, and signs the form body as sent. So every
+  delivery is verified first, over the raw bytes (`X-Slack-Signature`, `v0=`
+  + HMAC-SHA256 of `v0:{timestamp}:{body}`, with `X-Slack-Request-Timestamp`
+  inside a 300-second replay window), and decoded second. The decode
+  functions are `decodeSlackDelivery` (js), `BlockActions::decodeDelivery`
+  (php) and `decode_delivery` (python). The event is published as it
+  arrives: `type`, `team`, `enterprise`, `user`, `channel`, `message`,
+  `trigger_id`, `response_url`, and `actions[]` with `action_id`,
+  `block_id`, `type`, `value`, `selected_option` and `action_ts`. A field
+  Slack did not send is `null`, never `""`. **Slack shows the user an error
+  unless the request is answered with a 200 within 3 seconds**, so a host
+  acknowledges first and runs the graph after. Verified against Slack's own
+  worked example from "Verifying requests from Slack" in PHP and Python.
+- **`message_update`: edit a message the app posted** (`chat.update`,
+  addressed by `channel` + `ts`). Declared `idempotent`, because replacing a
+  message with the same content is harmless. This is what a host calls after
+  a click. The click's `response_url` is deliberately never used: it is a URL
+  taken from a delivery, so posting to it would make the package contact an
+  address the request chose.
+- **`user_lookup_by_email`: find the Slack user with an email address**
+  (`users.lookupByEmail`, a read). It exists so a host can map Slack users to
+  its own; storing that map stays with the host. `users_not_found` arrives
+  as Slack's own reason, not as an empty result.
+- **`blocks` on `message_post`**: an optional Block Kit layout, buttons
+  included. `text` stays required, because it is what screen readers and
+  notifications show. A JSON string is parsed, an already-parsed array from
+  an upstream node passes through untouched, invalid JSON is refused by name
+  before any request is built, and an empty value is left out.
+- **`signingSecret`**, a credential scoped to the provider (one value for the
+  whole Slack app). It is needed only by `block_actions`.
+
+### Changed
+
+- **Scopes:** `users:read` and `users:read.email` join `chat:write`, for
+  `user_lookup_by_email`. An existing installation must be re-authorised to
+  grant them before that action can run. Nothing else needs them.
+- **Requires `fancy-connector-core` ≥ 0.11.0**, for `decodeDelivery` /
+  `DeliveryDecode`. The floor is raised for Slack only; it is derived from
+  the trigger that decodes.
+
 ## [0.1.3] — 2026-09-12
 
 ### Changed

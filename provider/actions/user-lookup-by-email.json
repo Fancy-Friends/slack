@@ -1,0 +1,28 @@
+{
+  "$comment": "GET /api/users.lookupByEmail, read from Slack's method reference. A read a host uses to map a Slack user to one of its own; storing that map is the host's, not the package's.",
+  "operation": "user_lookup_by_email",
+  "kind": "user_lookup_by_email",
+  "title": "Slack user lookup by email",
+  "description": "Find the Slack user in this workspace who has a given email address.",
+  "summary": "look up a Slack user by email",
+  "docs": "https://docs.slack.dev/reference/methods/users.lookupByEmail",
+  "sideEffects": "none",
+  "request": { "method": "GET", "path": "/api/users.lookupByEmail" },
+  "resultCheck": {
+    "okField": "ok",
+    "messageField": "error",
+    "error": "Slack rejected users.lookupByEmail",
+    "$comment": "users_not_found is Slack's answer when no member has that address. It is kept as Slack's own reason rather than turned into an empty result, because 'nobody has this email' and 'the lookup failed' need different actions."
+  },
+  "config": [
+    { "type": "text", "key": "email", "label": "Email", "required": true, "description": "The email address to look up. Requires the users:read.email scope.", "send": { "as": "email", "value": "string", "transform": "trim" } }
+  ],
+  "outputShape": [
+    { "path": "data.ok", "type": "boolean", "description": "True after resultCheck has established Slack found the user." },
+    { "path": "data.user.id", "type": "string", "description": "The Slack user ID, the same value a click carries as user.id." },
+    { "path": "data.user.team_id", "type": "string", "description": "The workspace the user belongs to." },
+    { "path": "data.user.name", "type": "string", "description": "The user's handle." },
+    { "path": "data.user", "type": "object", "description": "The full user object Slack returned." }
+  ],
+  "contract": { "sends": ["email"], "reads": ["ok", "error", "user"] }
+}

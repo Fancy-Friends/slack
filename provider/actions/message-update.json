@@ -1,0 +1,31 @@
+{
+  "$comment": "POST /api/chat.update, read from Slack's method reference. It replaces a message the app posted, addressed by its channel and ts. This is what a host calls after a button click; the click's response_url is deliberately NOT used, because a URL taken from a delivery would make the package contact an address the request chose.",
+  "operation": "message_update",
+  "kind": "message_update",
+  "title": "Slack message update",
+  "description": "Replace the text and blocks of a Slack message the app posted.",
+  "summary": "update a Slack message",
+  "docs": "https://docs.slack.dev/reference/methods/chat.update",
+  "sideEffects": "idempotent",
+  "$idempotencyComment": "Replacing a message with the same content leaves it as it was, so a retried update is harmless.",
+  "request": { "method": "POST", "path": "/api/chat.update", "encoding": "json" },
+  "resultCheck": {
+    "okField": "ok",
+    "messageField": "error",
+    "error": "Slack rejected chat.update",
+    "$comment": "Slack returns HTTP 200 for application failures. message_not_found and cant_update_message are Slack's own reasons, and they are kept."
+  },
+  "config": [
+    { "type": "text", "key": "channel", "label": "Channel", "required": true, "description": "The conversation ID holding the message, as returned when it was posted or carried in a click.", "send": { "in": "body", "as": "channel", "value": "string" } },
+    { "type": "text", "key": "ts", "label": "Message ts", "required": true, "description": "The message's ts, its stable identifier within the channel.", "send": { "in": "body", "as": "ts", "value": "string" } },
+    { "type": "textarea", "key": "text", "label": "Message", "required": true, "description": "The replacement top-level text, kept as the accessible fallback for the blocks.", "send": { "in": "body", "as": "text", "value": "string" } },
+    { "type": "json", "key": "blocks", "label": "Blocks", "description": "Optional replacement Block Kit layout: a JSON array of blocks.", "send": { "in": "body", "as": "blocks", "value": "json" } }
+  ],
+  "outputShape": [
+    { "path": "data.ok", "type": "boolean", "description": "True after resultCheck has established Slack accepted the update." },
+    { "path": "data.channel", "type": "string", "description": "The conversation holding the message." },
+    { "path": "data.ts", "type": "string", "description": "The updated message's ts, unchanged by the update." },
+    { "path": "data.text", "type": "string", "description": "The message text as Slack stored it." }
+  ],
+  "contract": { "sends": ["channel", "ts", "text", "blocks"], "reads": ["ok", "error", "channel", "ts", "text"] }
+}

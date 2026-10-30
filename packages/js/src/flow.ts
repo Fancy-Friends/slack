@@ -30,9 +30,15 @@ import { SLACK } from "./service.js";
 
 import {
   slackMessageKind,
+  slackMessageUpdateKind,
+  slackUserLookupByEmailKind,
+  slackBlockActionsKind,
 } from "@particle-academy/slack-ui";
 
 import { slackMessagePost } from "./actions/message-post.js";
+import { slackMessageUpdate } from "./actions/message-update.js";
+import { slackUserLookupByEmail } from "./actions/user-lookup-by-email.js";
+import { SLACK_BLOCK_ACTIONS } from "./triggers/block-actions.js";
 
 export const slackMessageExecutor: NodeExecutor = async (ctx) => {
   const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
@@ -52,7 +58,63 @@ export const slackMessageExecutor: NodeExecutor = async (ctx) => {
   return { __port: "out", value: result };
 };
 
+export const slackMessageUpdateExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+
+  const result = await slackMessageUpdate({
+    config,
+    input: ctx.inputs?.in,
+  });
+
+  ctx.emit({
+    type: "log",
+    level: "info",
+    nodeId: ctx.node.id,
+    message: `slack message_update ${(result.data as { id?: string })?.id} (${result.mode})`,
+  });
+
+  return { __port: "out", value: result };
+};
+
+export const slackUserLookupByEmailExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+
+  const result = await slackUserLookupByEmail({
+    config,
+    input: ctx.inputs?.in,
+  });
+
+  ctx.emit({
+    type: "log",
+    level: "info",
+    nodeId: ctx.node.id,
+    message: `slack user_lookup_by_email ${(result.data as { id?: string })?.id} (${result.mode})`,
+  });
+
+  return { __port: "out", value: result };
+};
+
+export const slackBlockActionsExecutor: NodeExecutor = async (ctx) => {
+  const config = ((ctx.node.data as { config?: Record<string, unknown> })?.config ?? {});
+  const connection = resolveConnection({
+    service: SLACK.service,
+    operation: "block_actions",
+    sandbox: SLACK.sandbox,
+    baseUrls: SLACK.baseUrls,
+    requires: SLACK.requires,
+    connectionId: typeof config.connection === "string" ? config.connection : null,
+    requested: typeof config.mode === "string" ? (config.mode as RequestedMode) : null,
+  });
+
+  const event = triggerEvent(SLACK_BLOCK_ACTIONS, connection, ctx.inputs?.in, config);
+
+  return { __port: "out", value: event };
+};
+
 /** The kinds a TypeScript host registers. */
 export const SLACK_RUNNABLE_KINDS: NodeKindDefinition[] = [
   { ...slackMessageKind, executor: slackMessageExecutor },
+  { ...slackMessageUpdateKind, executor: slackMessageUpdateExecutor },
+  { ...slackUserLookupByEmailKind, executor: slackUserLookupByEmailExecutor },
+  { ...slackBlockActionsKind, executor: slackBlockActionsExecutor },
 ];

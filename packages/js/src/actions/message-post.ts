@@ -33,7 +33,7 @@ import { SLACK } from "../service.js";
 export const MESSAGE_POST_OPERATION = "message_post";
 
 export type MessagePostOptions = {
-  /** The node's resolved config. Keys: channel, text. */
+  /** The node's resolved config. Keys: channel, text, blocks. */
   config: Record<string, unknown>;
   credentials?: Record<string, string | undefined>;
   mode?: RequestedMode;
@@ -55,6 +55,14 @@ export async function slackMessagePost(options: MessagePostOptions): Promise<Con
     throw new Error(`message_post: "text" is required (Message).`);
   }
 
+  if (typeof config.blocks === "string" && config.blocks !== "") {
+    try {
+      JSON.parse(config.blocks);
+    } catch (error) {
+      throw new Error(`message_post: "blocks" must be JSON: ${(error as Error).message}`);
+    }
+  }
+
   const result = await callConnector(SLACK, {
     operation: MESSAGE_POST_OPERATION,
     config,
@@ -70,6 +78,7 @@ export async function slackMessagePost(options: MessagePostOptions): Promise<Con
       json: {
         "channel": String(config.channel),
         "text": String(config.text),
+        ...(config.blocks !== undefined && config.blocks !== null && config.blocks !== "" ? { "blocks": typeof config.blocks === "string" ? JSON.parse(config.blocks) : config.blocks } : {}),
       },
     },
   });

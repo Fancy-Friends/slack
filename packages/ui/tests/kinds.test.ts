@@ -33,6 +33,13 @@ test("every kind declares what it emits", () => {
 
 test("the registry names are exactly what the manifest says", () => {
   assert.deepEqual(SLACK_KINDS.map((kind) => kind.name), [
-    "@particle-academy/slack_message"
+    "@particle-academy/slack_message",
+    "@particle-academy/slack_message_update",
+    "@particle-academy/slack_user_lookup_by_email",
+    "@particle-academy/slack_block_actions"
   ]);
+});
+
+test("a trigger takes no input port — it starts a run rather than continuing one", () => {
+  assert.deepEqual(SLACK_KINDS.find((k) => k.name.endsWith("_block_actions"))?.inputs, []);
 });

@@ -22,3 +22,6 @@
 export * from "./service.js";
 export * from "./faker.js";
 export * from "./actions/message-post.js";
+export * from "./actions/message-update.js";
+export * from "./actions/user-lookup-by-email.js";
+export * from "./triggers/block-actions.js";

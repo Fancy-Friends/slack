@@ -36,6 +36,9 @@ final class SlackFaker
 
         return match ($operation) {
             'message_post' => self::MessagePost($config, $fake),
+            'message_update' => self::MessageUpdate($config, $fake),
+            'user_lookup_by_email' => self::UserLookupByEmail($config, $fake),
+            'block_actions' => self::BlockActions($config, $fake),
             default => throw new \InvalidArgumentException(
                 // A faker asked for an operation it has no shape for must SAY so.
                 // Making something up would produce a green run whose output
@@ -61,6 +64,72 @@ final class SlackFaker
             'text' => 'Deployment finished successfully.',
             'app_id' => 'A012BC3DEF',
             'bot_id' => 'B012AB3CD',
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function MessageUpdate(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'ok' => true,
+        'channel' => 'C123ABC456',
+        'ts' => '1787719200.000100',
+        'text' => 'Ticket #42 assigned to Rosa.',
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function UserLookupByEmail(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'ok' => true,
+        'user' => [
+            'id' => 'U2CERLKJA',
+            'team_id' => 'T1DC2JH3J',
+            'name' => 'rosa',
+            'real_name' => 'Rosa Diaz',
+            'deleted' => false,
+            'is_bot' => false,
+        ],
+    ];
+    }
+
+    /** @param array<string,mixed> $config */
+    private static function BlockActions(array $config, mixed $fake): array|\stdClass
+    {
+        return [
+        'type' => 'block_actions',
+        'team' => [
+            'id' => 'T1DC2JH3J',
+            'domain' => 'testteamnow',
+        ],
+        'enterprise' => null,
+        'user' => [
+            'id' => 'U2CERLKJA',
+            'username' => 'roadrunner',
+            'team_id' => 'T1DC2JH3J',
+        ],
+        'channel' => [
+            'id' => 'C0123ABCD',
+            'name' => 'support',
+        ],
+        'message' => [
+            'type' => 'message',
+            'ts' => '1730070000.000100',
+            'text' => 'Ticket #42: Printer on fire',
+        ],
+        'trigger_id' => '398738663015.47445629121.803a0bc887a14d10d2c447fce8b6703c',
+        'response_url' => 'https://hooks.slack.com/actions/T1DC2JH3J/397700885554/96rGlfmibIGlgcZRskXaIFfN',
+        'actions' => [
+            [
+                'action_id' => 'ticket_assign_me',
+                'block_id' => 'ticket_42',
+                'type' => 'button',
+                'value' => '42',
+                'selected_option' => null,
+                'action_ts' => '1730070012.345678',
+            ],
         ],
     ];
     }
