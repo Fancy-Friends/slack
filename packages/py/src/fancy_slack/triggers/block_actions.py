@@ -50,7 +50,7 @@ def parse_signature(raw: str) -> tuple[str | None, str | None]:
     """Strip the `v0=` prefix the provider sends."""
     prefix = "v0="
 
-    return (raw[len(prefix):] if raw.startswith(prefix) else raw), None
+    return (raw[len(prefix):] if raw.startswith(prefix) else None), None
 
 
 def _header(headers: dict[str, str], name: str) -> str | None:

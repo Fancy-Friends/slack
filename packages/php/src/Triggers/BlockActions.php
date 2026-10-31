@@ -50,7 +50,7 @@ final class BlockActions
         $prefix = 'v0=';
 
         return [
-            'signature' => str_starts_with($raw, $prefix) ? substr($raw, strlen($prefix)) : $raw,
+            'signature' => str_starts_with($raw, $prefix) ? substr($raw, strlen($prefix)) : null,
             'timestamp' => null,
         ];
     }
