@@ -3,6 +3,18 @@
 All notable changes to `@particle-academy/slack-ui`,
 `@particle-academy/slack-js`, `particle-academy/slack-php` and `fancy-slack`.
 
+## [0.2.1] — 2026-10-31
+
+### Fixed
+
+- **A signature header without its `v0=` prefix is now REFUSED**, in all
+  three runtimes. The parsers stripped the prefix when it was present and used
+  the bare value otherwise, so the right HMAC digest with no prefix verified.
+  It was never a forgery path, because the digest still had to match, but a
+  header not in Slack's format is not Slack's header. Slack always sends the
+  prefix, so no genuine delivery is affected. Driven in TypeScript (newly),
+  PHP and Python, beside Slack's own published example, which still verifies.
+
 ## [0.2.0] — 2026-10-28
 
 ### Added

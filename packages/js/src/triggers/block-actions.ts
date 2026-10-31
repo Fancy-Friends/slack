@@ -31,9 +31,9 @@ export const SLACK_BLOCK_ACTIONS_SCHEME: HmacScheme = {
   encoding: "hex",
 };
 
-/** Strip the `v0=` prefix the provider sends. */
+/** Strip the `v0=` prefix the provider sends. Without it, there is no signature. */
 export function parseSlackSignature(raw: string): { signature?: string } {
-  return { signature: raw.startsWith("v0=") ? raw.slice(3) : raw };
+  return raw.startsWith("v0=") ? { signature: raw.slice(3) } : {};
 }
 
 export const SLACK_BLOCK_ACTIONS_DECODE: DeliveryDecode = {
