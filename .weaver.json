@@ -59,7 +59,7 @@
     "packages/py/src/fancy_slack/__init__.py": "80af76eae7fe401f0cd82986c79ec3abcc476a6a29b6d42c58d62b2d908cd6a6",
     "packages/py/src/fancy_slack/_fake.py": "e64bebffd5aae61dce36d218e253098c0c167f5aefe34d6db567142f7e1e193f",
     "packages/py/src/fancy_slack/_form_field_json.py": "4fa91b05b55736c5817ea5d495408118a3392fed52f7fbfb612e6818baaa373d",
-    "packages/py/src/fancy_slack/_runtime.py": "5592070c140ee832baa35be6df6ef127f9c0a9f596767581f15806a4594e281a",
+    "packages/py/src/fancy_slack/_runtime.py": "251a7d8c3d84c864742c1c156556c6e7e599b0527e8972e1bd43e92b05627c8b",
     "packages/py/src/fancy_slack/actions/__init__.py": "ef8b14ceb7eba70568f770e0925f82bee7259097eb36d1a03ad5f557e356675c",
     "packages/py/src/fancy_slack/actions/message_post.py": "9bad3c446693e55a1ddd4431648fc5f8ead7cd8cc011bde7f60e1351e350afff",
     "packages/py/src/fancy_slack/actions/message_update.py": "2690cf6cb6d00660e3d6b2933719d1d9d2d30cb6b23c7a94491b4cc9815ae4de",
