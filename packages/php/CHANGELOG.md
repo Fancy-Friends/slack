@@ -3,6 +3,23 @@
 All notable changes to `@particle-academy/slack-ui`,
 `@particle-academy/slack-js`, `particle-academy/slack-php` and `fancy-slack`.
 
+## [0.3.1] — 2026-11-08
+
+### Fixed
+
+- **The Laravel config's environment variable names now split camelCase**,
+  as documented. **Consumer action: none.** The old unsplit names are still
+  read as a fallback, so an app that set them keeps working; the new names
+  are preferred.
+
+  | Preferred | Still read |
+  |---|---|
+  | `SLACK_CLIENT_ID` | `SLACK_CLIENTID` |
+  | `SLACK_CLIENT_SECRET` | `SLACK_CLIENTSECRET` |
+  | `SLACK_ACCESS_TOKEN` | `SLACK_ACCESSTOKEN` |
+  | `SLACK_REFRESH_TOKEN` | `SLACK_REFRESHTOKEN` |
+  | `SLACK_SIGNING_SECRET` | `SLACK_SIGNINGSECRET` |
+
 ## [0.3.0] — 2026-11-08
 
 ### Added
