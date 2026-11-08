@@ -20,14 +20,14 @@ return [
 
     'credentials' => [
         // Client ID (one per installation).
-        'clientId' => env('SLACK_CLIENTID'),
+        'clientId' => env('SLACK_CLIENT_ID', env('SLACK_CLIENTID')),
         // Client secret (one per installation, secret).
-        'clientSecret' => env('SLACK_CLIENTSECRET'),
+        'clientSecret' => env('SLACK_CLIENT_SECRET', env('SLACK_CLIENTSECRET')),
         // Bot access token (per connected account, secret).
-        'accessToken' => env('SLACK_ACCESSTOKEN'),
+        'accessToken' => env('SLACK_ACCESS_TOKEN', env('SLACK_ACCESSTOKEN')),
         // Refresh token (per connected account, secret).
-        'refreshToken' => env('SLACK_REFRESHTOKEN'),
+        'refreshToken' => env('SLACK_REFRESH_TOKEN', env('SLACK_REFRESHTOKEN')),
         // Signing secret (one per installation, secret).
-        'signingSecret' => env('SLACK_SIGNINGSECRET'),
+        'signingSecret' => env('SLACK_SIGNING_SECRET', env('SLACK_SIGNINGSECRET')),
     ],
 ];
